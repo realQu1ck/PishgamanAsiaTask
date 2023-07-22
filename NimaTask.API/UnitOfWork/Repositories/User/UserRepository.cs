@@ -13,11 +13,8 @@ public class UserRepository : GenericRepository<NTUser>, IUserRepository
             if (find == null)
                 return false;
 
-            find.Name = model.Name;
             find.Family = model.Family;
-            find.Parent = model.Parent;
             find.PhoneNumber = model.PhoneNumber;
-            find.Password = model.Password;
 
             return true;
         }

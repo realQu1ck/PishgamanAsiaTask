@@ -99,6 +99,10 @@ try
         app.UseSwaggerUI();
     }
 
+    app.UseCors(builder => builder
+    .AllowAnyOrigin()
+    .AllowAnyMethod()
+    .AllowAnyHeader());
     //NimaTaskDbContextSeed seed = new NimaTaskDbContextSeed(builder.Services.BuildServiceProvider());
     //seed.Seed();
 

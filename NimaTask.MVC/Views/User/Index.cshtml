@@ -1,6 +1,7 @@
 ﻿@model PaginationResponse<List<UserViewModel>>
 @{
     ViewData["Title"] = "Users";
+    var token = @User.Claims.FirstOrDefault(x => x.Type == "Token")?.Value;
 }
 
 <h1>Users</h1>
@@ -14,20 +15,50 @@
             <th scope="col">Father Name</th>
             <th scope="col">Meli Code</th>
             <th scope="col">Phone Number</th>
+            <th scope="col">Action</th>
         </tr>
     </thead>
     <tbody>
         @foreach (var item in Model.Data)
         {
             <tr>
-                <th scope="row">@item.Id</th>
-                <td>@item.Name</td>
-                <td>@item.Family</td>
-                <td>@item.Parent</td>
-                <td>@item.Meli</td>
-                <td>@item.PhoneNumber</td>
+                <th class="text-center" scope="row">@item.Id</th>
+                <td class="text-center">@item.Name</td>
+                <td><input value="@item.Family" class="form-control" id="@item.Id-family" /></td>
+                <td class="text-center">@item.Parent</td>
+                <td class="text-center">@item.Meli</td>
+                <td><input value="@item.PhoneNumber" class="form-control" id="@item.Id-phone" /></td>
+                <td><button class="btn btn-outline-success m-1" id="btnUpdate" model="@item.Id">Update</button><a class="btn btn-outline-danger m-1">Invoke Access</a><a class="btn btn-outline-danger">Delete</a></td>
             </tr>
         }
     </tbody>
 </table>
 
+@section Scripts{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $(btnUpdate).click(function () {
+                var model = $(this).attr('model');
+                var phone = $(`#${model}-phone`).val();
+                var family = $(`#${model}-family`).val();
+                var data = { "Id": parseInt(model), "Family": family, "PhoneNumber": phone };
+                console.log(data);
+
+                var settings = {
+                    "async": true,
+                    "url": "https://localhost:7033/api/User/EditProfile",
+                    "method": "PUT",
+                    "headers": {
+                        "Content-Type": "application/json",
+                        "Authorization": "Bearer @token"
+                    },
+                    "data": data
+                }
+                $.ajax(settings).done(function (response) {
+                    console.log(response)
+                });
+            })
+        });
+
+    </script>
+}

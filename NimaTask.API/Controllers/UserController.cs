@@ -29,10 +29,10 @@ public class UserController : ControllerBase
             Id = x.Id,
             Name = x.Name,
             Family = x.Family,
-            Meli = x.Family,
+            Meli = x.Meli,
             Parent = x.Parent,
             PhoneNumber = x.PhoneNumber,
-            Picture = Convert.ToBase64String(x.Picture)
+            Picture = x.Picture != null ? Convert.ToBase64String(x.Picture) : null
         }).ToList(), validFilter.PageNumber, validFilter.PageSize));
     }
 
@@ -86,39 +86,22 @@ public class UserController : ControllerBase
     [HttpPut]
     [Route("EditProfile")]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Write")]
-    public async Task<IActionResult> EditProfile([FromForm] RegisterViewModel model)
+    public async Task<IActionResult> EditProfile([FromBody] EditViewModel model)
     {
         var check = await unitOfWork.UserRepository.FirstOrDefaultAsync(x => x.PhoneNumber == model.PhoneNumber);
         if (check == null) return NotFound("Not Found");
 
         var user = new NTUser
         {
-            Id = model.Id,
-            Name = model.Name,
-            Family = model.Name,
-            Meli = model.Name,
-            Parent = model.Name,
-            PhoneNumber = model.Name,
-            Password = model.Password,
+            Id = check.Id,
+            Family = model.Family,
+            PhoneNumber = model.PhoneNumber,
         };
 
-        if (model.Picture != null)
-        {
-            if (model.Picture.Length > 0)
-            {
-                using (var ms = new MemoryStream())
-                {
-                    model.Picture.CopyTo(ms);
-                    user.Picture = ms.ToArray();
-                }
-            }
-        }
-
         await unitOfWork.UserRepository.UpdateAsync(user);
-
         await unitOfWork.SaveChangesAsync();
 
-        return Ok("User Created Successfully.");
+        return Ok("User Update Successfully.");
     }
 
     [HttpPost]
