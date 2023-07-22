@@ -10,6 +10,8 @@ public class NimaTaskDbContext : DbContext
     public DbSet<NTRole> NTRoles { get; set; }
     public DbSet<NTUserRole> NTUserRoles { get; set; }
     public DbSet<NTUser> NTUsers { get; set; }
+    public DbSet<NTUserToken> NTUserTokens { get; set; }
+    public DbSet<NTUserTokenLog> NTUserTokenLogs { get; set; }
 
     public override Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess, CancellationToken cancellationToken = default)
     {

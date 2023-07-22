@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NimaTask.API.Data.NimaTaskDatabase;
 
@@ -11,9 +12,11 @@ using NimaTask.API.Data.NimaTaskDatabase;
 namespace NimaTask.API.Data.NimaTaskDatabase.Migrations
 {
     [DbContext(typeof(NimaTaskDbContext))]
-    partial class NimaTaskDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230722171413_NimaTaskPasswordAdded")]
+    partial class NimaTaskPasswordAdded
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -124,68 +127,6 @@ namespace NimaTask.API.Data.NimaTaskDatabase.Migrations
                     b.ToTable("NTUserRoles");
                 });
 
-            modelBuilder.Entity("NimaTask.API.Models.NTUserToken", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("CreationDateTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("ModifiedDateTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Token")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("Valid")
-                        .HasColumnType("bit");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("NTUserTokens");
-                });
-
-            modelBuilder.Entity("NimaTask.API.Models.NTUserTokenLog", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("CreationDateTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("ModifiedDateTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int?>("NTUserId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("TokenId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("NTUserId");
-
-                    b.HasIndex("TokenId");
-
-                    b.ToTable("NTUserTokenLogs");
-                });
-
             modelBuilder.Entity("NimaTask.API.Models.NTUserRole", b =>
                 {
                     b.HasOne("NimaTask.API.Models.NTRole", "Role")
@@ -205,32 +146,6 @@ namespace NimaTask.API.Data.NimaTaskDatabase.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("NimaTask.API.Models.NTUserToken", b =>
-                {
-                    b.HasOne("NimaTask.API.Models.NTUser", "User")
-                        .WithMany("Tokens")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("NimaTask.API.Models.NTUserTokenLog", b =>
-                {
-                    b.HasOne("NimaTask.API.Models.NTUser", null)
-                        .WithMany("Logs")
-                        .HasForeignKey("NTUserId");
-
-                    b.HasOne("NimaTask.API.Models.NTUserToken", "Token")
-                        .WithMany("Logs")
-                        .HasForeignKey("TokenId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Token");
-                });
-
             modelBuilder.Entity("NimaTask.API.Models.NTRole", b =>
                 {
                     b.Navigation("UserRoles");
@@ -238,16 +153,7 @@ namespace NimaTask.API.Data.NimaTaskDatabase.Migrations
 
             modelBuilder.Entity("NimaTask.API.Models.NTUser", b =>
                 {
-                    b.Navigation("Logs");
-
-                    b.Navigation("Tokens");
-
                     b.Navigation("UserRoles");
-                });
-
-            modelBuilder.Entity("NimaTask.API.Models.NTUserToken", b =>
-                {
-                    b.Navigation("Logs");
                 });
 #pragma warning restore 612, 618
         }

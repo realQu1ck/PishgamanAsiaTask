@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NimaTask.API.Data.NimaTaskDatabase;
 
@@ -11,9 +12,11 @@ using NimaTask.API.Data.NimaTaskDatabase;
 namespace NimaTask.API.Data.NimaTaskDatabase.Migrations
 {
     [DbContext(typeof(NimaTaskDbContext))]
-    partial class NimaTaskDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230722174713_TokenAdded")]
+    partial class TokenAdded
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

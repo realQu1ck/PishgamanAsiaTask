@@ -17,7 +17,13 @@ public class NTUser : BaseModel
     [Required(ErrorMessage = "Please Enter Your Name !")]
     public string PhoneNumber { get; set; }
 
+    [Required(ErrorMessage = "Please Enter Your Password !")]
+    [MinLength(8)]
+    public string Password { get; set; }
+
     public byte[] Picture { get; set; }
 
     public virtual ICollection<NTUserRole> UserRoles { get; set; }
+    public virtual ICollection<NTUserTokenLog> Logs { get; set; }
+    public virtual ICollection<NTUserToken> Tokens { get; set; }
 }
