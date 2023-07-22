@@ -25,6 +25,10 @@
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\NimaTask.ViewModels\NimaTask.ViewModels.csproj" />
+  </ItemGroup>
+
   <!--<ItemGroup>
     <None Include="nlog.config">
       <Generator>TextTemplatingFileGenerator</Generator>

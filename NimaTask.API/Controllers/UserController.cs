@@ -14,6 +14,27 @@ public class UserController : ControllerBase
         _config = config;
     }
 
+    [HttpGet]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Read")]
+    public async Task<IActionResult> GetUsers([FromQuery] PaginationFilter filter)
+    {
+        var validFilter = new PaginationFilter(filter.PageNumber, filter.PageSize);
+        var pagedData = await unitOfWork.UserRepository.GetDbSet()
+            .Skip((validFilter.PageNumber - 1) * validFilter.PageSize)
+            .Take(validFilter.PageSize)
+            .ToListAsync();
+        var totalRecords = await unitOfWork.UserRepository.GetDbSet().CountAsync();
+        return Ok(new PaginationResponse<List<UserViewModel>>(pagedData.Select(x => new UserViewModel
+        {
+            Name = x.Name,
+            Family = x.Family,
+            Meli = x.Family,
+            Parent = x.Parent,
+            PhoneNumber = x.PhoneNumber,
+            Picture = Convert.ToBase64String(x.Picture)
+        }).ToList(), validFilter.PageNumber, validFilter.PageSize));
+    }
+
     [HttpPost]
     [Route("Login")]
     public async Task<IActionResult> Login([FromBody] LoginViewModel model)
@@ -47,12 +68,78 @@ public class UserController : ControllerBase
         return Ok(new { Token = token, PhoneNumber = user.PhoneNumber, User = user.Name + " " + user.Family });
     }
 
-    //[HttpPost]
-    //[Route("Register")]
-    //public async Task<IActionResult> Register()
-    //{
+    [HttpPut]
+    [Route("EditProfile")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Write")]
+    public async Task<IActionResult> EditProfile([FromForm] RegisterViewModel model)
+    {
+        var check = await unitOfWork.UserRepository.FirstOrDefaultAsync(x => x.PhoneNumber == model.PhoneNumber);
+        if (check == null) return NotFound("Not Found");
 
-    //}
+        var user = new NTUser
+        {
+            Id = model.Id,
+            Name = model.Name,
+            Family = model.Name,
+            Meli = model.Name,
+            Parent = model.Name,
+            PhoneNumber = model.Name,
+            Password = model.Password,
+        };
+
+        if (model.Picture != null)
+        {
+            if (model.Picture.Length > 0)
+            {
+                using (var ms = new MemoryStream())
+                {
+                    model.Picture.CopyTo(ms);
+                    user.Picture = ms.ToArray();
+                }
+            }
+        }
+
+        await unitOfWork.UserRepository.UpdateAsync(user);
+
+        await unitOfWork.SaveChangesAsync();
+
+        return Ok("User Created Successfully.");
+    }
+
+    [HttpPost]
+    [Route("Register")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Write")]
+    public async Task<IActionResult> Register([FromForm] RegisterViewModel model)
+    {
+        var check = await unitOfWork.UserRepository.AnyAsync(x => x.PhoneNumber == model.PhoneNumber || x.Family == model.Family);
+        if (check) return Ok("Family or PhoneNumber is Duplicate");
+
+        var user = new NTUser
+        {
+            Name = model.Name,
+            Family = model.Name,
+            Meli = model.Name,
+            Parent = model.Name,
+            PhoneNumber = model.Name,
+            Password = model.Password,
+        };
+        if (model.Picture != null)
+        {
+            if (model.Picture.Length > 0)
+            {
+                using (var ms = new MemoryStream())
+                {
+                    model.Picture.CopyTo(ms);
+                    user.Picture = ms.ToArray();
+                }
+            }
+        }
+        await unitOfWork.UserRepository.AddAsync(user);
+
+        await unitOfWork.SaveChangesAsync();
+
+        return Ok("User Created Successfully.");
+    }
 
     private string GenerateToken(NTUser user)
     {

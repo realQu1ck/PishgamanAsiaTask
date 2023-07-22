@@ -21,3 +21,8 @@ global using System.Net;
 global using NimaTask.API.Helpers;
 global using NimaTask.API.ViewModels;
 global using System.IdentityModel.Tokens.Jwt;
+global using Microsoft.AspNetCore.Authorization;
+global using Microsoft.Identity.Client;
+global using NimaTask.ViewModels;
+global using NimaTask.ViewModelsl;
+global using NimaTask.ViewModels.Pagination;

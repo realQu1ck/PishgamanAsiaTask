@@ -1,4 +1,6 @@
-﻿namespace NimaTask.API.ViewModels;
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace NimaTask.ViewModels;
 
 public class LoginViewModel
 {
