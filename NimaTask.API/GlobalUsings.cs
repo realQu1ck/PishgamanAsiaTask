@@ -2,3 +2,12 @@
 global using NimaTask.API.Data.NLogDatabase;
 global using NLog.Web;
 global using NLog;
+global using System.ComponentModel.DataAnnotations;
+global using System.ComponentModel.DataAnnotations.Schema;
+global using NimaTask.API.Models;
+global using NimaTask.API.Data.NimaTaskDatabase;
+global using System.Linq.Expressions;
+global using NimaTask.API.UnitOfWork.Generic;
+global using NimaTask.API.UnitOfWork;
+global using Microsoft.AspNetCore.Http;
+global using Microsoft.AspNetCore.Mvc;
