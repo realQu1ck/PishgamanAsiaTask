@@ -11,6 +11,7 @@ namespace NimaTask.API.UnitOfWork
         public IUserRepository UserRepository { get; }
 
         public Task SaveChangesAsync();
+        public Task EnsureCreated();
         public void Dispose();
     }
 }

@@ -32,4 +32,9 @@ public class UnitOfWork : IUnitOfWork
     {
         await _context.SaveChangesAsync();
     }
+
+    public async Task EnsureCreated()
+    {
+        await _context.Database.EnsureCreatedAsync();
+    }
 }

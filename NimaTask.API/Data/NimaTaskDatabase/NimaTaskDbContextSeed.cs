@@ -11,7 +11,18 @@ public class NimaTaskDbContextSeed
 
     public void Seed()
     {
+        EnsureCreated().Wait();
         SeedRoles().Wait();
+    }
+
+    public async Task EnsureCreated()
+    {
+        using (var scope = serviceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope())
+        {
+            var unitOfWork = scope.ServiceProvider.GetRequiredService<IUnitOfWork>();
+
+            await unitOfWork.EnsureCreated();
+        }
     }
 
     public async Task SeedRoles()

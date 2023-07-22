@@ -4,7 +4,7 @@ public class NimaTaskDbContext : DbContext
 {
     public NimaTaskDbContext(DbContextOptions options) : base(options)
     {
-        
+
     }
 
     public DbSet<NTRole> NTRoles { get; set; }
@@ -29,6 +29,29 @@ public class NimaTaskDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        base.OnModelCreating(modelBuilder);
+        modelBuilder.Entity<NTUserRole>().Property(x => x.RoleId)
+            .IsRequired();
+        modelBuilder.Entity<NTUserRole>().Property(x => x.UserId)
+            .IsRequired();
+
+        modelBuilder.Entity<NTRole>().Property(x => x.Role).IsRequired();
+
+        modelBuilder.Entity<NTUser>().Property(x => x.Name)
+            .HasMaxLength(50)
+            .IsRequired();
+
+        modelBuilder.Entity<NTUser>().Property(x => x.Family)
+            .HasMaxLength(100)
+            .IsRequired();
+
+        modelBuilder.Entity<NTUser>().Property(x => x.Parent)
+            .HasMaxLength(150)
+            .IsRequired();
+
+        modelBuilder.Entity<NTUser>().Property(x => x.Meli)
+            .HasMaxLength(11)
+            .IsRequired();
+
+        modelBuilder.Entity<NTUser>().Property(x => x.Picture).IsRequired(false);
     }
 }

@@ -29,8 +29,8 @@ try
         app.UseSwaggerUI();
     }
 
-    //NimaTaskDbContextSeed seed = new NimaTaskDbContextSeed(builder.Services.BuildServiceProvider());
-    //seed.Seed();
+    NimaTaskDbContextSeed seed = new NimaTaskDbContextSeed(builder.Services.BuildServiceProvider());
+    seed.Seed();
 
     app.UseHttpsRedirection();
 
