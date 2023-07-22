@@ -15,8 +15,8 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
 
     public virtual async Task<T> AddAsync(T model)
     {
-        await dbSet.AddAsync(model);
-        return model;
+        var res = await dbSet.AddAsync(model);
+        return res.Entity;
     }
 
     public async Task<bool> AnyAsync(Expression<Func<T, bool>> predicate)

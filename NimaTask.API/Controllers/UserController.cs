@@ -26,6 +26,7 @@ public class UserController : ControllerBase
         var totalRecords = await unitOfWork.UserRepository.GetDbSet().CountAsync();
         return Ok(new PaginationResponse<List<UserViewModel>>(pagedData.Select(x => new UserViewModel
         {
+            Id = x.Id,
             Name = x.Name,
             Family = x.Family,
             Meli = x.Family,
@@ -41,14 +42,27 @@ public class UserController : ControllerBase
     {
         if (!ModelState.IsValid) return BadRequest();
 
-        var user = await unitOfWork.UserRepository.FirstOrDefaultAsync(x => x.PhoneNumber == model.PhoneNumber);
+        var user = await unitOfWork.UserRepository.GetDbSet()
+            .Include(x => x.UserRoles)
+            .ThenInclude(x => x.Role)
+            .FirstOrDefaultAsync(x => x.PhoneNumber == model.PhoneNumber);
         if (user == null) return NotFound();
 
         if (!SecurePasswordHasher.Verify(model.Password, user.Password)) return Ok("Password is worng");
 
-        var token = GenerateToken(user);
+        List<string> roles = new List<string>();
+        foreach (var item in user.UserRoles)
+        {
+            roles.Add(item.Role.Role);
+        }
+
+        var token = GenerateToken(user, roles);
 
         var userToken = await unitOfWork.UserTokenRepository.FirstOrDefaultAsync(x => x.UserId == user.Id);
+
+        if (!userToken.Valid)
+            return Unauthorized();
+
         if (userToken != null)
         {
             userToken.Token = token;
@@ -59,7 +73,8 @@ public class UserController : ControllerBase
             await unitOfWork.UserTokenRepository.AddAsync(new NTUserToken
             {
                 Token = token,
-                UserId = user.Id
+                UserId = user.Id,
+                Valid = true
             });
         }
 
@@ -134,18 +149,32 @@ public class UserController : ControllerBase
                 }
             }
         }
-        await unitOfWork.UserRepository.AddAsync(user);
+        var add = await unitOfWork.UserRepository.AddAsync(user);
+
+        var saveracc = await unitOfWork.UserRepository.GetDbSet()
+            .Include(x => x.Tokens)
+            .Where(x => x.PhoneNumber == User.Identity.Name).FirstOrDefaultAsync();
+
+        await unitOfWork.UserTokenLogRepository.AddAsync(new NTUserTokenLog
+        {
+            Token = saveracc.Tokens.Last(),
+            UserId = add.Id
+        });
 
         await unitOfWork.SaveChangesAsync();
 
         return Ok("User Created Successfully.");
     }
 
-    private string GenerateToken(NTUser user)
+    private string GenerateToken(NTUser user, List<string> roles)
     {
         var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]));
         var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
         var claims = new List<Claim> { new Claim(ClaimTypes.NameIdentifier, user.PhoneNumber) };
+        foreach (var item in roles)
+        {
+            claims.Add(new Claim(ClaimTypes.Role, item));
+        }
 
         var token = new JwtSecurityToken(_config["Jwt:Issuer"],
             _config["Jwt:Audience"],

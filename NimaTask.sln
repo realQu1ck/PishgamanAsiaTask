@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NimaTask.API", "NimaTask.AP
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NimaTask.ViewModels", "NimaTask.ViewModels\NimaTask.ViewModels.csproj", "{9364EB84-87E2-43E9-A4D9-8E21BB5CD1FD}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NimaTask.MVC", "NimaTask.MVC\NimaTask.MVC.csproj", "{49304AB8-1B10-4696-BF5E-DE0CF38FE20D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{9364EB84-87E2-43E9-A4D9-8E21BB5CD1FD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9364EB84-87E2-43E9-A4D9-8E21BB5CD1FD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9364EB84-87E2-43E9-A4D9-8E21BB5CD1FD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{49304AB8-1B10-4696-BF5E-DE0CF38FE20D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{49304AB8-1B10-4696-BF5E-DE0CF38FE20D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{49304AB8-1B10-4696-BF5E-DE0CF38FE20D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{49304AB8-1B10-4696-BF5E-DE0CF38FE20D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
