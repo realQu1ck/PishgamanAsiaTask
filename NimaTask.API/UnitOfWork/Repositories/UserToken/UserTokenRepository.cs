@@ -15,6 +15,7 @@ public class UserTokenRepository : GenericRepository<NTUserToken>, IUserTokenRep
                 return false;
 
             find.Token = model.Token;
+            find.Valid = model.Valid;
 
             return true;
         }

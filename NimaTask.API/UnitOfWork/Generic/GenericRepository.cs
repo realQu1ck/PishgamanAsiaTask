@@ -40,7 +40,7 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
         return await dbSet.ToListAsync();
     }
 
-    public async Task<T> GetAsync(Guid id)
+    public async Task<T> GetAsync(int id)
     {
         return await dbSet.FindAsync(id);
     }

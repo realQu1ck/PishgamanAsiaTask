@@ -4,7 +4,7 @@ public interface IGenericRepository<T> where T : class
 {
     public Task<ICollection<T>> GetAllAsync();
     public DbSet<T> GetDbSet();
-    public Task<T> GetAsync(Guid id);
+    public Task<T> GetAsync(int id);
     public Task<bool> AnyAsync(Expression<Func<T, bool>> predicate);
     public Task<T> FirstOrDefaultAsync(Expression<Func<T, bool>> predicate);
     Task<IEnumerable<T>> WhereAsync(Expression<Func<T, bool>> predicate);

@@ -39,7 +39,7 @@ public class UserController : Controller
 
     public async Task<IActionResult> LoginConfirm(LoginViewModel model)
     {
-        var post = await _httpClient.PostAsJsonAsync<LoginViewModel>(new Uri(route + "/Login"), model);
+        var post = await _httpClient.PostAsJsonAsync(new Uri(route + "/Login"), model);
         if (!post.IsSuccessStatusCode)
             return RedirectToAction("Login", "User");
 

@@ -48,7 +48,7 @@ public class UserController : ControllerBase
             .FirstOrDefaultAsync(x => x.PhoneNumber == model.PhoneNumber);
         if (user == null) return NotFound();
 
-        if (!SecurePasswordHasher.Verify(model.Password, user.Password)) return Ok("Password is worng");
+        if (!SecurePasswordHasher.Verify(model.Password, user.Password)) return BadRequest("Password is worng");
 
         List<string> roles = new List<string>();
         foreach (var item in user.UserRoles)
@@ -80,7 +80,13 @@ public class UserController : ControllerBase
 
         await unitOfWork.SaveChangesAsync();
 
-        return Ok(new { Token = token, PhoneNumber = user.PhoneNumber, User = user.Name + " " + user.Family });
+        var response = new LoginResponse()
+        {
+            Token = token,
+            PhoneNumber = user.PhoneNumber,
+            User = user.Name + " " + user.Family
+        };
+        return Ok(response);
     }
 
     [HttpPut]
@@ -148,6 +154,38 @@ public class UserController : ControllerBase
 
         return Ok("User Created Successfully.");
     }
+
+    [HttpDelete]
+    [Route("Invoke/{id}")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Write")]
+    public async Task<IActionResult> Invoke(int id)
+    {
+        var check = await unitOfWork.UserTokenRepository.FirstOrDefaultAsync(x => x.UserId == id);
+        if (check == null) return NotFound("Not Found");
+
+        check.Valid = false;
+
+        await unitOfWork.UserTokenRepository.UpdateAsync(check);
+        await unitOfWork.SaveChangesAsync();
+
+        return Ok("User Invoked Successfully.");
+    }
+
+
+    [HttpDelete]
+    [Route("Delete/{id}")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Write")]
+    public async Task<IActionResult> Delete(int id)
+    {
+        var check = await unitOfWork.UserRepository.GetAsync(id);
+        if (check == null) return NotFound("Not Found");
+
+        unitOfWork.UserRepository.DeleteAsync(check);
+        await unitOfWork.SaveChangesAsync();
+
+        return Ok("User Deleted Successfully.");
+    }
+
 
     private string GenerateToken(NTUser user, List<string> roles)
     {

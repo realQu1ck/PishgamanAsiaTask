@@ -28,7 +28,11 @@
                 <td class="text-center">@item.Parent</td>
                 <td class="text-center">@item.Meli</td>
                 <td><input value="@item.PhoneNumber" class="form-control" id="@item.Id-phone" /></td>
-                <td><button class="btn btn-outline-success m-1" id="btnUpdate" model="@item.Id">Update</button><a class="btn btn-outline-danger m-1">Invoke Access</a><a class="btn btn-outline-danger">Delete</a></td>
+                <td>
+                    <button class="btn btn-outline-success m-1" id="btnUpdate" model="@item.Id">Update</button>
+                    <a id="btnInvoke" model="@item.Id" class="btn btn-outline-danger m-1">Invoke Access</a>
+                    <a class="btn btn-outline-danger" id="btnDelete" model="@item.Id">Delete</a>
+                </td>
             </tr>
         }
     </tbody>
@@ -41,23 +45,61 @@
                 var model = $(this).attr('model');
                 var phone = $(`#${model}-phone`).val();
                 var family = $(`#${model}-family`).val();
-                var data = { "Id": parseInt(model), "Family": family, "PhoneNumber": phone };
-                console.log(data);
-
+                var data = JSON.stringify(`{ "Id": ${parseInt(model)}, "Family": "${family}", "PhoneNumber": "${phone}" }`);
                 var settings = {
-                    "async": true,
                     "url": "https://localhost:7033/api/User/EditProfile",
                     "method": "PUT",
                     "headers": {
                         "Content-Type": "application/json",
                         "Authorization": "Bearer @token"
                     },
-                    "data": data
+                    "data": JSON.stringify({
+                        "Id": parseInt(model),
+                        "Family": family,
+                        "PhoneNumber": phone
+                    }),
                 }
+                console.log(settings);
+
                 $.ajax(settings).done(function (response) {
-                    console.log(response)
+                    alert(response);
                 });
-            })
+            });
+
+
+            $(btnDelete).click(function () {
+                var model = $(this).attr('model');
+                var settings = {
+                    "url": `https://localhost:7033/api/User/Delete/${model}`,
+                    "method": "DELETE",
+                    "headers": {
+                        "Content-Type": "application/json",
+                        "Authorization": "Bearer @token"
+                    }
+                }
+                console.log(settings);
+
+                $.ajax(settings).done(function (response) {
+                    alert(response);
+                });
+            });
+
+            $(btnInvoke).click(function () {
+                var model = $(this).attr('model');
+                var settings = {
+                    "url": `https://localhost:7033/api/User/Invoke/${model}`,
+                    "method": "DELETE",
+                    "headers": {
+                        "Content-Type": "application/json",
+                        "Authorization": "Bearer @token"
+                    }
+                }
+                console.log(settings);
+
+                $.ajax(settings).done(function (response) {
+                    alert(response);
+                });
+            });
         });
 
     </script>
