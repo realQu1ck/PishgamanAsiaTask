@@ -1,0 +1,50 @@
+﻿@model RegisterViewModel
+@{
+    ViewData["Title"] = "Register";
+}
+
+<h1>Register</h1>
+<form asp-action="RegisterConfirm">
+    <div class="form-group">
+        <label>Enter your Name : </label>
+        <input class="form-control" type="text" asp-for="Name" placeholder="Name"/>
+        <span class="text-danger" asp-validation-for="Name"></span>
+    </div>
+    <div class="form-group mt-3">
+        <label>Enter your Family : </label>
+        <input class="form-control" type="text" asp-for="Family" placeholder="Family" />
+        <span class="text-danger" asp-validation-for="Family"></span>
+    </div>
+    <div class="form-group mt-3">
+        <label>Enter your Phone Number : </label>
+        <input class="form-control" type="number" asp-for="PhoneNumber" placeholder="Phone Number" />
+        <span class="text-danger" asp-validation-for="PhoneNumber"></span>
+    </div>
+    <div class="form-group mt-3">
+        <label>Enter your Father Name : </label>
+        <input class="form-control" type="text" asp-for="Parent" placeholder="Father Name" />
+        <span class="text-danger" asp-validation-for="Parent"></span>
+    </div>
+    <div class="form-group mt-3">
+        <label>Enter your Code Meli : </label>
+        <input class="form-control" type="number" asp-for="Meli" placeholder="Code Meli" />
+        <span class="text-danger" asp-validation-for="Meli"></span>
+    </div>
+    <div class="form-group mt-3">
+        <label>Enter your Password : </label>
+        <input class="form-control" type="password" asp-for="Password" placeholder="Password" />
+        <span class="text-danger" asp-validation-for="Password"></span>
+    </div>
+    <div class="form-group mt-3">
+        <label>Enter your Confirm Password : </label>
+        <input class="form-control" type="password" asp-for="ConfirmPassword" placeholder="Confirm Password" />
+        <span class="text-danger" asp-validation-for="ConfirmPassword"></span>
+    </div>
+    <div class="form-group mt-3">
+        <label>Upload your Profile Picture : </label>
+        <input class="form-control" type="file" asp-for="Picture" placeholder="Picture" />
+        <span class="text-danger" asp-validation-for="Picture"></span>
+    </div>
+    <button class="btn btn-outline-success mt-3" type="submit">Create User</button>
+</form>
+

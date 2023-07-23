@@ -113,7 +113,7 @@ public class UserController : ControllerBase
     [HttpPost]
     [Route("Register")]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Write")]
-    public async Task<IActionResult> Register([FromForm] RegisterViewModel model)
+    public async Task<IActionResult> Register([FromBody] RegisterViewModel model)
     {
         var check = await unitOfWork.UserRepository.AnyAsync(x => x.PhoneNumber == model.PhoneNumber || x.Family == model.Family);
         if (check) return Ok("Family or PhoneNumber is Duplicate");

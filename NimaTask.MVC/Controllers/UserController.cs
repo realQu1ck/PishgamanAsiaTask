@@ -61,4 +61,16 @@ public class UserController : Controller
 
         return RedirectToAction("Index", "Home");
     }
+
+    public async Task<IActionResult> RegisterConfirm(RegisterViewModel model)
+    {
+        var token = HttpContext.User.Claims.FirstOrDefault(x => x.Type == "Token")?.Value;
+        _httpClient.DefaultRequestHeaders.Authorization =
+           new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+        var post = await _httpClient.PostAsJsonAsync(new Uri(route + "/Register"), model);
+        if (!post.IsSuccessStatusCode)
+            return RedirectToAction("Register", "User");
+
+        return RedirectToAction("Index");
+    }
 }
